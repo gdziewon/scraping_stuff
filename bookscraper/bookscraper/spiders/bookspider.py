@@ -1,4 +1,7 @@
+import random
+
 import scrapy
+import random
 from bookscraper.items import BookItem
 
 
@@ -13,6 +16,7 @@ class BookspiderSpider(scrapy.Spider):
             'cleandata.csv': {'format': 'csv', 'overwrite': True}
         }
     }
+
     def parse(self, response):
         # creating iterable of all 'books' in <article class=product_pod
         books = response.css('article.product_pod')
@@ -24,7 +28,7 @@ class BookspiderSpider(scrapy.Spider):
             else:
                 # Adding catalogue/ if not present
                 book_url = 'https://books.toscrape.com/catalogue/' + relative_url
-            # sending each 'book' to parse_book_page function, with book_url
+            # sending each 'book' to parse_book_page function, with book_url and random user-agent from the list
             yield response.follow(book_url, callback=self.parse_book_page)
 
         # Getting url for next page, <li class=next <a href=
@@ -35,7 +39,7 @@ class BookspiderSpider(scrapy.Spider):
                 next_page_url = 'https://books.toscrape.com/' + next_page
             else:
                 next_page_url = 'https://books.toscrape.com/catalogue/' + next_page
-            # Calling parse (this function) function with url of next page
+            # Calling parse (this function) function with url of next page and random user-agent from the list
             yield response.follow(next_page_url, callback=self.parse)
 
     def parse_book_page(self, response):

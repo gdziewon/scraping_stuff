@@ -17,11 +17,26 @@ FEEDS = {
     'booksdata.json': {'format': 'json'}
 }
 
+# API Key from scrapeops.io
+SCRAPEOPS_API_KEY = ''
+SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'https://headers.scrapeops.io/v1/user-agents'
+SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
+SCRAPEOPS_NUM_RESULTS = 50
+
+# Proxies from geonode
+# ROTATING_PROXY_LIST = [
+#     '197.234.13.25:4145',
+#     '185.244.30.43:24301',
+#     '167.172.181.111:80'
+# ]
+
+# ROTATING_PROXY_LIST_PATH = './proxies.txt'
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "bookscraper (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -54,9 +69,14 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "bookscraper.middlewares.BookscraperDownloaderMiddleware": 543,
-#}
+
+DOWNLOADER_MIDDLEWARES = {
+    "bookscraper.middlewares.BookscraperDownloaderMiddleware": 543,
+    #"bookscraper.middlewares.ScrapeOpsFakeUserAgentMiddleware": 400,
+    "bookscraper.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware": 400,
+    # "rotating_proxies.middlewares.RotatingProxyMiddleware": 610,
+    # "rotating_proxies.middlewares.BanDetectionMiddleware": 620
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -69,7 +89,7 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
     # Number is for priority
     "bookscraper.pipelines.BookscraperPipeline": 300,
-    "bookscraper.pipelines.SaveToMySQLPipeline": 400,
+    #"bookscraper.pipelines.SaveToMySQLPipeline": 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
